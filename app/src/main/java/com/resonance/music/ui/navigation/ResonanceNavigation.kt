@@ -1,6 +1,11 @@
 package com.resonance.music.ui.navigation
 
 import android.net.Uri
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
@@ -13,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.resonance.music.data.repository.AuthRepository
 import com.resonance.music.data.repository.MusicRepository
+import com.resonance.music.data.repository.SettingsStore
 import com.resonance.music.playback.PlaybackManager
 import com.resonance.music.ui.components.MiniPlayer
 import com.resonance.music.ui.screens.album.AlbumScreen
@@ -61,13 +68,22 @@ object Routes {
 fun ResonanceNavHost(
     authRepository: AuthRepository = hiltViewModel<NavViewModel>().authRepository,
     playbackManager: PlaybackManager = hiltViewModel<NavViewModel>().playbackManager,
-    musicRepository: MusicRepository = hiltViewModel<NavViewModel>().musicRepository
+    musicRepository: MusicRepository = hiltViewModel<NavViewModel>().musicRepository,
+    settingsStore: SettingsStore = hiltViewModel<NavViewModel>().settingsStore
 ) {
     val navController = rememberNavController()
     val isLoggedIn by authRepository.isLoggedIn.collectAsState(initial = null)
     val nowPlaying by playbackManager.nowPlaying.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    // The NavHost graph below is built once, so these transitions must read the setting
+    // live (via rememberUpdatedState) rather than bake in the value at graph-build time.
+    val disableTabAnimationsState = settingsStore.disableTabAnimations.collectAsState(initial = false)
+    val disableTabAnimations by rememberUpdatedState(disableTabAnimationsState.value)
+    val tabEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
+        { if (disableTabAnimations) EnterTransition.None else fadeIn() }
+    val tabExitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition =
+        { if (disableTabAnimations) ExitTransition.None else fadeOut() }
 
     val onFullScreen = currentRoute == null ||
             currentRoute in listOf(Routes.PLAYER, Routes.LYRICS, Routes.QUEUE, Routes.LOGIN)
@@ -177,14 +193,26 @@ fun ResonanceNavHost(
                 )
             }
 
-            composable(Routes.HOME) {
+            composable(
+                Routes.HOME,
+                enterTransition = tabEnterTransition,
+                exitTransition = tabExitTransition,
+                popEnterTransition = tabEnterTransition,
+                popExitTransition = tabExitTransition
+            ) {
                 HomeScreen(
                     onAlbumClick = { navController.navigate(Routes.album(it)) },
                     onSeeAllClick = { onTabSelected(Routes.LIBRARY) }
                 )
             }
 
-            composable(Routes.LIBRARY) {
+            composable(
+                Routes.LIBRARY,
+                enterTransition = tabEnterTransition,
+                exitTransition = tabExitTransition,
+                popEnterTransition = tabEnterTransition,
+                popExitTransition = tabExitTransition
+            ) {
                 LibraryScreen(
                     onArtistClick = { navController.navigate(Routes.artist(it)) },
                     onAlbumClick = { navController.navigate(Routes.album(it)) },
@@ -193,7 +221,13 @@ fun ResonanceNavHost(
                 )
             }
 
-            composable(Routes.SEARCH) {
+            composable(
+                Routes.SEARCH,
+                enterTransition = tabEnterTransition,
+                exitTransition = tabExitTransition,
+                popEnterTransition = tabEnterTransition,
+                popExitTransition = tabExitTransition
+            ) {
                 SearchScreen(
                     onArtistClick = { navController.navigate(Routes.artist(it)) },
                     onAlbumClick = { navController.navigate(Routes.album(it)) }
@@ -234,7 +268,13 @@ fun ResonanceNavHost(
                 )
             }
 
-            composable(Routes.SETTINGS) {
+            composable(
+                Routes.SETTINGS,
+                enterTransition = tabEnterTransition,
+                exitTransition = tabExitTransition,
+                popEnterTransition = tabEnterTransition,
+                popExitTransition = tabExitTransition
+            ) {
                 SettingsScreen(
                     onLogout = {
                         navController.navigate(Routes.LOGIN) {

@@ -22,10 +22,12 @@ class SettingsStore @Inject constructor(
     private object Keys {
         val GAPLESS = booleanPreferencesKey("gapless_playback")
         val SCROBBLE = booleanPreferencesKey("scrobble_enabled")
+        val DISABLE_TAB_ANIMATIONS = booleanPreferencesKey("disable_tab_animations")
     }
 
     val gaplessPlayback: Flow<Boolean> = context.settingsDataStore.data.map { it[Keys.GAPLESS] ?: true }
     val scrobbleEnabled: Flow<Boolean> = context.settingsDataStore.data.map { it[Keys.SCROBBLE] ?: true }
+    val disableTabAnimations: Flow<Boolean> = context.settingsDataStore.data.map { it[Keys.DISABLE_TAB_ANIMATIONS] ?: false }
 
     suspend fun setGaplessPlayback(enabled: Boolean) {
         context.settingsDataStore.edit { it[Keys.GAPLESS] = enabled }
@@ -33,5 +35,9 @@ class SettingsStore @Inject constructor(
 
     suspend fun setScrobbleEnabled(enabled: Boolean) {
         context.settingsDataStore.edit { it[Keys.SCROBBLE] = enabled }
+    }
+
+    suspend fun setDisableTabAnimations(enabled: Boolean) {
+        context.settingsDataStore.edit { it[Keys.DISABLE_TAB_ANIMATIONS] = enabled }
     }
 }

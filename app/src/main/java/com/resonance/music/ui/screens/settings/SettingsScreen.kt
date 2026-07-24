@@ -135,6 +135,15 @@ fun SettingsScreen(
                 }
             )
 
+            ListItem(
+                headlineContent = { Text("Disable tab transition animations") },
+                supportingContent = { Text("Switch instantly between Home, Library, Search, and Settings") },
+                leadingContent = { Icon(Icons.Default.Animation, contentDescription = null) },
+                trailingContent = {
+                    Switch(checked = uiState.disableTabAnimations, onCheckedChange = viewModel::setDisableTabAnimations)
+                }
+            )
+
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             // ── Account ──
