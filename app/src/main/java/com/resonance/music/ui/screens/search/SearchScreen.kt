@@ -26,6 +26,7 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val nowPlaying by viewModel.nowPlaying.collectAsState()
     val coverArtBuilder = remember<(String) -> String?> { { viewModel.getCoverArtUrl(it) } }
 
     Scaffold(
@@ -140,6 +141,7 @@ fun SearchScreen(
                     items(uiState.songs, key = { "song_${it.id}" }) { song ->
                         SongListItem(
                             song = song,
+                            isPlaying = song.id == nowPlaying.song?.id,
                             onClick = { viewModel.playSong(song) },
                             actions = SongActions(
                                 onPlayNext = { viewModel.playNext(song) },

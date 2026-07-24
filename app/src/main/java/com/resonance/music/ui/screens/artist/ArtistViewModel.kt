@@ -6,6 +6,7 @@ import com.resonance.music.data.api.models.AlbumItem
 import com.resonance.music.data.api.models.ArtistItem
 import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.data.repository.MusicRepository
+import com.resonance.music.playback.NowPlaying
 import com.resonance.music.playback.PlaybackManager
 import com.resonance.music.playback.RepeatMode
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,6 +45,9 @@ class ArtistViewModel @Inject constructor(
 
     /** Mirrors the global repeat mode so the artist header's Loop toggle reflects it. */
     val repeatMode: StateFlow<RepeatMode> = playbackManager.repeatMode
+
+    /** Mirrors the global now-playing song so track rows can show a playing indicator. */
+    val nowPlaying: StateFlow<NowPlaying> = playbackManager.nowPlaying
 
     // One stable instance so UiState copies compare equal. 128px suits 48dp rows.
     private val coverArtBuilder: (String) -> String? = { musicRepository.getCoverArtUrl(it, 128) }

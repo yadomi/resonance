@@ -239,6 +239,7 @@ private fun FavoritesTab(
     onArtistClick: (String) -> Unit,
     viewModel: LibraryViewModel
 ) {
+    val nowPlaying by viewModel.nowPlaying.collectAsState()
     val hasContent = uiState.starredArtists.isNotEmpty() ||
             uiState.starredAlbums.isNotEmpty() ||
             uiState.starredSongs.isNotEmpty()
@@ -292,6 +293,7 @@ private fun FavoritesTab(
                 items(uiState.starredSongs, key = { it.id }, contentType = { "song" }) { song ->
                     SongListItem(
                         song = song,
+                        isPlaying = song.id == nowPlaying.song?.id,
                         onClick = { viewModel.playStarredSong(song) },
                         actions = SongActions(
                             onPlayNext = { viewModel.playNext(song) },

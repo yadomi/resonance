@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.resonance.music.data.api.models.SongItem
@@ -16,6 +17,7 @@ import com.resonance.music.data.api.models.SongItem
 fun SongListItem(
     song: SongItem,
     trackNumber: Int? = null,
+    isPlaying: Boolean = false,
     onClick: () -> Unit,
     actions: SongActions = SongActions()
 ) {
@@ -23,18 +25,34 @@ fun SongListItem(
 
     ListItem(
         headlineContent = {
-            Text(song.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                song.title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = if (isPlaying) FontWeight.Bold else FontWeight.Normal,
+                color = if (isPlaying) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onSurface
+            )
         },
         supportingContent = {
             Text(
                 text = listOfNotNull(song.artist, song.duration?.let { formatSongDuration(it) })
                     .joinToString(" \u2022 "),
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = if (isPlaying) MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+                        else MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         leadingContent = {
-            if (trackNumber != null) {
+            if (isPlaying) {
+                Icon(
+                    Icons.Default.Equalizer,
+                    contentDescription = "Now playing",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.width(24.dp)
+                )
+            } else if (trackNumber != null) {
                 Text(
                     text = trackNumber.toString(),
                     style = MaterialTheme.typography.bodyMedium,

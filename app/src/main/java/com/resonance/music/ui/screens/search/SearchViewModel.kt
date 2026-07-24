@@ -6,6 +6,7 @@ import com.resonance.music.data.api.models.AlbumItem
 import com.resonance.music.data.api.models.ArtistItem
 import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.data.repository.MusicRepository
+import com.resonance.music.playback.NowPlaying
 import com.resonance.music.playback.PlaybackManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -32,6 +33,9 @@ class SearchViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+
+    /** Mirrors the global now-playing song so track rows can show a playing indicator. */
+    val nowPlaying: StateFlow<NowPlaying> = playbackManager.nowPlaying
 
     private var searchJob: Job? = null
 

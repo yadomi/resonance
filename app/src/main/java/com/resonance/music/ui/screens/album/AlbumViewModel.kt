@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.data.repository.MusicRepository
+import com.resonance.music.playback.NowPlaying
 import com.resonance.music.playback.PlaybackManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,9 @@ class AlbumViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AlbumUiState())
     val uiState: StateFlow<AlbumUiState> = _uiState.asStateFlow()
+
+    /** Mirrors the global now-playing song so track rows can show a playing indicator. */
+    val nowPlaying: StateFlow<NowPlaying> = playbackManager.nowPlaying
 
     private var albumId: String? = null
 

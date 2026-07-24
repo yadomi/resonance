@@ -32,6 +32,7 @@ fun PlaylistScreen(
     viewModel: PlaylistViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val nowPlaying by viewModel.nowPlaying.collectAsState()
 
     LaunchedEffect(playlistId) {
         viewModel.loadPlaylist(playlistId)
@@ -178,6 +179,7 @@ fun PlaylistScreen(
                     SongListItem(
                         song = song,
                         trackNumber = index + 1,
+                        isPlaying = song.id == nowPlaying.song?.id,
                         onClick = { viewModel.playSongAt(index) },
                         actions = SongActions(
                             onPlayNext = { viewModel.playNext(song) },

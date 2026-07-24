@@ -32,6 +32,7 @@ fun AlbumScreen(
     viewModel: AlbumViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val nowPlaying by viewModel.nowPlaying.collectAsState()
 
     LaunchedEffect(albumId) {
         viewModel.loadAlbum(albumId)
@@ -183,6 +184,7 @@ fun AlbumScreen(
                         SongListItem(
                             song = song,
                             trackNumber = song.track,
+                            isPlaying = song.id == nowPlaying.song?.id,
                             onClick = { viewModel.playSongAt(index) },
                             actions = SongActions(
                                 onPlayNext = { viewModel.playNext(song) },

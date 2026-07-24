@@ -46,6 +46,7 @@ fun ArtistScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val repeatMode by viewModel.repeatMode.collectAsState()
+    val nowPlaying by viewModel.nowPlaying.collectAsState()
     var selectedTab by rememberSaveable { mutableStateOf(0) } // 0 = Albums, 1 = Tracks
 
     LaunchedEffect(artistId) {
@@ -213,6 +214,7 @@ fun ArtistScreen(
                     itemsIndexed(uiState.tracks, key = { index, s -> "${s.id}_$index" }) { index, song ->
                         SongListItem(
                             song = song,
+                            isPlaying = song.id == nowPlaying.song?.id,
                             onClick = { viewModel.playTrackAt(index) },
                             actions = SongActions(
                                 onPlayNext = { viewModel.playNext(song) },
