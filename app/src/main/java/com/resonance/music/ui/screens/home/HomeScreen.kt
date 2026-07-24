@@ -104,6 +104,10 @@ fun HomeScreen(
                 item(key = "shuffle") {
                     FilledTonalButton(
                         onClick = { viewModel.shuffleAll() },
+                        colors = ButtonDefaults.filledTonalButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
                     ) {
                         Icon(Icons.Default.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))

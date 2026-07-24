@@ -144,29 +144,40 @@ fun ResonanceNavHost(
                                 containerColor = Color.Transparent,
                                 windowInsets = WindowInsets(0, 0, 0, 0)
                             ) {
+                                // Selected state uses the theme's primary accent (rather than the
+                                // M3 default secondary role) so each theme's identity color shows.
+                                val tabColors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                                )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
                                     label = { Text("Home") },
                                     selected = currentRoute == Routes.HOME,
-                                    onClick = { onTabSelected(Routes.HOME) }
+                                    onClick = { onTabSelected(Routes.HOME) },
+                                    colors = tabColors
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.Search, contentDescription = null) },
                                     label = { Text("Search") },
                                     selected = currentRoute == Routes.SEARCH,
-                                    onClick = { onTabSelected(Routes.SEARCH) }
+                                    onClick = { onTabSelected(Routes.SEARCH) },
+                                    colors = tabColors
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.LibraryMusic, contentDescription = null) },
                                     label = { Text("Library") },
                                     selected = currentRoute == Routes.LIBRARY,
-                                    onClick = { onTabSelected(Routes.LIBRARY) }
+                                    onClick = { onTabSelected(Routes.LIBRARY) },
+                                    colors = tabColors
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.Settings, contentDescription = null) },
                                     label = { Text("Settings") },
                                     selected = currentRoute == Routes.SETTINGS,
-                                    onClick = { onTabSelected(Routes.SETTINGS) }
+                                    onClick = { onTabSelected(Routes.SETTINGS) },
+                                    colors = tabColors
                                 )
                             }
                             Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
