@@ -20,6 +20,7 @@ data class PlayerUiState(
     val albumId: String? = null,
     val coverArtUrl: String? = null,
     val isPlaying: Boolean = false,
+    val isBuffering: Boolean = false,
     val duration: Long = 0L,
     val isFavorite: Boolean = false,
     val shuffleEnabled: Boolean = false,
@@ -50,6 +51,7 @@ class PlayerViewModel @Inject constructor(
                     albumId = song?.albumId,
                     coverArtUrl = song?.coverArt?.let { musicRepository.getCoverArtUrl(it, 600) },
                     isPlaying = nowPlaying.isPlaying,
+                    isBuffering = nowPlaying.isBuffering,
                     duration = nowPlaying.duration,
                     isFavorite = song?.starred != null
                 )

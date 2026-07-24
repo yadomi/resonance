@@ -102,11 +102,18 @@ fun MiniPlayer(
                 }
 
                 // Controls
-                IconButton(onClick = onPlayPauseClick) {
-                    Icon(
-                        imageVector = if (nowPlaying.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                        contentDescription = if (nowPlaying.isPlaying) "Pause" else "Play"
-                    )
+                IconButton(onClick = onPlayPauseClick, enabled = !nowPlaying.isBuffering) {
+                    if (nowPlaying.isBuffering) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Icon(
+                            imageVector = if (nowPlaying.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                            contentDescription = if (nowPlaying.isPlaying) "Pause" else "Play"
+                        )
+                    }
                 }
 
                 IconButton(onClick = onNextClick) {

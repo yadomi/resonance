@@ -166,13 +166,21 @@ fun PlayerScreen(
 
                 FilledIconButton(
                     onClick = viewModel::togglePlayPause,
+                    enabled = !uiState.isBuffering,
                     modifier = Modifier.size(64.dp)
                 ) {
-                    Icon(
-                        imageVector = if (uiState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                        contentDescription = if (uiState.isPlaying) "Pause" else "Play",
-                        modifier = Modifier.size(32.dp)
-                    )
+                    if (uiState.isBuffering) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(28.dp),
+                            strokeWidth = 3.dp
+                        )
+                    } else {
+                        Icon(
+                            imageVector = if (uiState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                            contentDescription = if (uiState.isPlaying) "Pause" else "Play",
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
                 }
 
                 IconButton(onClick = viewModel::next) {

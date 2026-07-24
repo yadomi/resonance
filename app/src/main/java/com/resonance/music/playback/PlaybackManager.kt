@@ -34,6 +34,7 @@ import javax.inject.Singleton
 data class NowPlaying(
     val song: SongItem? = null,
     val isPlaying: Boolean = false,
+    val isBuffering: Boolean = false,
     val duration: Long = 0L
 )
 
@@ -93,6 +94,7 @@ class PlaybackManager @Inject constructor(
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
+            _nowPlaying.update { it.copy(isBuffering = playbackState == Player.STATE_BUFFERING) }
             if (playbackState == Player.STATE_READY) syncNowPlaying()
         }
 
@@ -152,6 +154,7 @@ class PlaybackManager @Inject constructor(
         _nowPlaying.value = NowPlaying(
             song = song,
             isPlaying = c.isPlaying,
+            isBuffering = c.playbackState == Player.STATE_BUFFERING,
             duration = if (c.duration > 0) c.duration else (song?.duration?.toLong() ?: 0L) * 1000
         )
         // Report "now playing" to the server once per new track.
